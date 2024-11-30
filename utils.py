@@ -13,7 +13,7 @@ redirect_url = f"{settings.running_host}:{settings.app_port}/docs" if settings.d
 
 def generate_short_url(id: int) -> str:
     random_seed = int(time.time() * 1000)
-    combined_id = f"{id}-{random_seed}-{settings.encoder_salt}"
+    combined_id = f"{id}-{random_seed}-{settings.encoding_salt}"
     hash_object = hashlib.sha256(combined_id.encode())
     hash_digest = hash_object.digest()
     
