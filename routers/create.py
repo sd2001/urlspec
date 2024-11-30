@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import text
 from db import SessionLocal, URL
-from utils import save_url
+from utils import save_url, redirect_url
 from config import settings
 import validators
 
@@ -27,7 +27,6 @@ class URLResponse(BaseModel):
 async def create_url(request: URLCreate, db: AsyncSession = Depends(get_db)):
     if not validators.url(request.long_url):
         raise HTTPException(status_code=400, detail="URL not valid")
-    redirect_url = f"{settings.running_host}:{settings.app_port}/" if settings.app_port else f"{settings.running_host}/"
     existing_url = await URL.fetch_row_via_long_url(long_url=request.long_url)
     if existing_url:
         return URLResponse(
