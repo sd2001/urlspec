@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from sqlalchemy import text
 from db import SessionLocal, URL
-from utils import save_url, redirect_url
+from utils import save_url, redirect_url_base
 from config import settings
 import validators
 
@@ -31,10 +31,10 @@ async def create_url(request: URLCreate, db: AsyncSession = Depends(get_db)):
     if existing_url:
         return URLResponse(
             short_alias=existing_url.short_url,
-            shortened_url=redirect_url + existing_url.short_url
+            shortened_url=redirect_url_base + existing_url.short_url
         )
     saved_url = await save_url(db, request.long_url, request.ttl)
     return URLResponse(
             short_alias=saved_url.short_url,
-            shortened_url=redirect_url + saved_url.short_url
+            shortened_url=redirect_url_base + saved_url.short_url
         )

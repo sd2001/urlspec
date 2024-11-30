@@ -9,7 +9,8 @@ from db import URL
 from config import settings
 import time
 
-redirect_url = f"{settings.running_host}:{settings.app_port}/docs" if settings.debug else f"{settings.running_host}/docs"
+redirect_url_base = f"{settings.running_host}:{settings.app_port}" if settings.debug else f"{settings.running_host}"
+redirect_url = f"{redirect_url_base}/docs"
 
 def generate_short_url(id: int) -> str:
     random_seed = int(time.time() * 1000)
