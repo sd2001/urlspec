@@ -7,10 +7,8 @@ import logging
 from logger_utils import setup_logging
 setup_logging()
 
-# Initialize FastAPI app
 app = FastAPI()
 
-# Initialize database and Redis queue
 @app.on_event("startup")
 async def startup():
     await init_db()
@@ -22,7 +20,6 @@ async def startup():
 async def shutdown():
     await RedisClient.close_instance()
 
-# Routers
 app.include_router(create.router)
 app.include_router(redirect.router)
 app.include_router(analytics.router)

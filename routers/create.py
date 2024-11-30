@@ -10,12 +10,10 @@ import validators
 
 router = APIRouter()
 
-# Database dependency
 async def get_db():
     async with SessionLocal() as db:
         yield db
 
-# Request model
 class URLCreate(BaseModel):
     long_url: str
     ttl: int = 7
@@ -24,7 +22,7 @@ class URLResponse(BaseModel):
     short_alias: str
     shortened_url: str
 
-# Create short URL
+
 @router.post("/create")
 async def create_url(request: URLCreate, db: AsyncSession = Depends(get_db)):
     if not validators.url(request.long_url):

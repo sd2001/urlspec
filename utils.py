@@ -1,23 +1,29 @@
 import base62
 import random
+import hashlib
 import traceback
 from datetime import datetime, timedelta
 from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi.responses import RedirectResponse, HTMLResponse
 from db import URL
+from config import settings
 import time
 
-# Base62 encoding
+redirect_url = f"{settings.running_host}:{settings.app_port}/docs" if settings.debug else f"{settings.running_host}/docs"
+
 def generate_short_url(id: int) -> str:
     random_seed = int(time.time() * 1000)
-    modified_id = id + random_seed
-    encoded = base62.encode(modified_id)
-    return encoded.zfill(7)[:7]
+    combined_id = f"{id}-{random_seed}-{settings.encoder_salt}"
+    hash_object = hashlib.sha256(combined_id.encode())
+    hash_digest = hash_object.digest()
+    
+    truncated_hash = int.from_bytes(hash_digest[:6], byteorder="big")
+    final_encoded_alias = base62.encode(truncated_hash)
+    return final_encoded_alias.zfill(7)[:7]
 
-# TTL management
 def calculate_expiry(ttl: int) -> datetime:
     return datetime.UTC() + timedelta(days=ttl)
 
-# Save to database
 async def save_url(db: AsyncSession, long_url: str, ttl: int):
     db_url = URL(long_url=long_url, created_at=datetime.now(), ttl=ttl)
     db.add(db_url)
@@ -25,8 +31,6 @@ async def save_url(db: AsyncSession, long_url: str, ttl: int):
         # First commit to get the ID
         await db.commit()
         await db.refresh(db_url)
-        
-        # Generate short URL
         short_url = generate_short_url(db_url.id)
         db_url.short_url = short_url
         
@@ -36,3 +40,17 @@ async def save_url(db: AsyncSession, long_url: str, ttl: int):
     except Exception as e:
         print(traceback.format_exc())
         await db.rollback()
+        
+def pause_redirect(mssg):
+    html_content = f"""
+    <html>
+        <head>
+            <meta http-equiv="refresh" content="5;url={redirect_url}" />
+        </head>
+        <body>
+            <h1>{mssg}</h1>
+            <p>Click here to go to <a href="{redirect_url}">Homepage Docs</a></p>
+        </body>
+    </html>
+    """
+    return HTMLResponse(content=html_content)

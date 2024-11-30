@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     running_host: str = Field("localhost", env="RUNNING_HOST")  # Default is "localhost"
     app_port: str = Field(..., env="APP_PORT")  # Default is "localhost"
     debug: bool = Field("False", env="DEBUG")
+    encoder_salt: bool = Field(..., env="ENCODING_SALT")
 
     class Config:
         env_file = ".env"  # Specify the .env file location
