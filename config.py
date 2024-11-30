@@ -6,9 +6,9 @@ class Settings(BaseSettings):
     db_name: str = Field(..., env="DB_NAME")      # Required variable
     url_tablename: str = Field(..., env="URL_TABLENAME")  # Required variable
     running_host: str = Field("localhost", env="RUNNING_HOST")  # Default is "localhost"
-    app_port: str = Field(..., env="APP_PORT")
-    debug: bool = Field(False, env="DEBUG")
-    encoding_salt: str = Field(..., env="ENCODING_SALT")
+    app_port: str = Field(..., env="APP_PORT") # Required variable
+    debug: bool = Field(False, env="DEBUG")  # Optional
+    encoding_salt: str = Field(..., env="ENCODING_SALT")  # Required variable
 
     class Config:
         env_file = ".env"  # Specify the .env file location

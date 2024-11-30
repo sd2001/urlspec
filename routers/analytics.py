@@ -12,8 +12,9 @@ async def get_db():
         yield db
 
 
-@router.get("/analytics/{short_url}")
+@router.get("/{short_url}")
 async def get_analytics(short_url: str, db: AsyncSession = Depends(get_db)):
+    ## fetching analotics from db
     db_url = await URL.fetch_row_via_short_url(short_url=short_url)
     if not db_url:
         return pause_redirect(mssg='URL not found in our records')
