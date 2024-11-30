@@ -31,9 +31,8 @@ def is_expired(db_url) -> bool:
     if not db_url.ttl or not db_url.created_at:
         return False
     current_time = datetime.now(timezone.utc)
-    # Ensure created_at has timezone info
     created_at = db_url.created_at.replace(tzinfo=timezone.utc) if db_url.created_at.tzinfo is None else db_url.created_at
-    expiration_time = created_at + timedelta(seconds=db_url.ttl)
+    expiration_time = created_at + timedelta(days=db_url.ttl)
     return current_time > expiration_time
 
 async def save_url(db: AsyncSession, long_url: str, ttl: int):

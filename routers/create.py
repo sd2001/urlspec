@@ -34,7 +34,7 @@ async def create_url(request: URLCreate, db: AsyncSession = Depends(get_db)):
     if existing_url:
         return URLResponse(
             short_alias=existing_url.short_url,
-            shortened_url=redirect_url_base + existing_url.short_url
+            shortened_url=redirect_url_base + "/" + existing_url.short_url
         )
     ## Func Requirment 1 as per the assignment doc: Shorten urls
     saved_url = await save_url(db, request.long_url, request.ttl)
