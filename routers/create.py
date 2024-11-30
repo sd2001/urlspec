@@ -36,5 +36,5 @@ async def create_url(request: URLCreate, db: AsyncSession = Depends(get_db)):
     saved_url = await save_url(db, request.long_url, request.ttl)
     return URLResponse(
             short_alias=saved_url.short_url,
-            shortened_url=redirect_url_base + saved_url.short_url
+            shortened_url=f"{redirect_url_base}/{saved_url.short_url}"
         )
