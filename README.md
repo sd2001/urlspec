@@ -1,5 +1,8 @@
 # URLSpec: URL Shortening and Analytics Service
 
+![image](https://github.com/user-attachments/assets/398aac7c-4d49-4059-83f7-0fa087bdfe2d)
+
+
 **URLSpec** is a lightweight and efficient tool designed for managing and specifying URL routing patterns, optimized for high-performance web services. Built with **FastAPI**, it supports seamless URL mapping, caching with Redis, and persistence using SQLite. The application is structured to simplify the development and deployment of shortened routing mechanisms.
 
 ---
