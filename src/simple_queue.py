@@ -35,7 +35,7 @@ async def increment_count(short_url):
         db_url = result.scalar_one_or_none()
         db_url.access_count += 1
         await db.commit()
-        logging.info("Analytics IncremeUpdatednted")
+        logging.info("Analytics Incremented")
     
 
 # Background task to increment access counts in the database
@@ -53,8 +53,8 @@ async def increment_count(short_url):
 #                     await db.commit()
 
 # @router.on_event("startup")
-async def startup_queuing_server():
-    """
-    Schedule the process_queue function as a background task.
-    """
-    asyncio.create_task(process_queue())
+# async def startup_queuing_server():
+#     """
+#     Schedule the process_queue function as a background task.
+#     """
+#     asyncio.create_task(process_queue())

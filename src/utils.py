@@ -2,7 +2,7 @@ import base62
 import random
 import hashlib
 import traceback
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.responses import RedirectResponse, HTMLResponse
 from db import URL
@@ -13,6 +13,8 @@ redirect_url_base = f"{settings.running_host}:{settings.app_port}" if settings.d
 redirect_url = f"{redirect_url_base}/docs"
 
 def generate_short_url(id: int) -> str:
+    ## Func Requirment 3 as per the assignment doc: Unique URLS
+    ## Using: hashlib + base62 encoding for optimal uniqueness -> 7 char aliases
     random_seed = int(time.time() * 1000)
     combined_id = f"{id}-{random_seed}-{settings.encoding_salt}"
     hash_object = hashlib.sha256(combined_id.encode())
@@ -25,7 +27,20 @@ def generate_short_url(id: int) -> str:
 def calculate_expiry(ttl: int) -> datetime:
     return datetime.UTC() + timedelta(days=ttl)
 
+def is_expired(db_url) -> bool:
+    if not db_url.ttl or not db_url.created_at:
+        return False
+    current_time = datetime.now(timezone.utc)
+    created_at = db_url.created_at.replace(tzinfo=timezone.utc) if db_url.created_at.tzinfo is None else db_url.created_at
+    expiration_time = created_at + timedelta(days=db_url.ttl)
+    return current_time > expiration_time
+
 async def save_url(db: AsyncSession, long_url: str, ttl: int):
+    ## Here we first insert the long url into the row.
+    ## Then we fetch the id and insert the short url into it
+    ## Encoding done is based on the id of the row.
+    ## In a distributed DB environment it might be a problem, but for single DB
+    ## clusters this would work just fine
     db_url = URL(long_url=long_url, created_at=datetime.now(), ttl=ttl)
     db.add(db_url)
     try:
@@ -39,6 +54,7 @@ async def save_url(db: AsyncSession, long_url: str, ttl: int):
         await db.commit()
         return db_url
     except Exception as e:
+        ## Rollback the entire row in case of error to prevent unused rows
         print(traceback.format_exc())
         await db.rollback()
         

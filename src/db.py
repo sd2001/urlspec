@@ -5,7 +5,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from config import settings
 
-DATABASE_URL = f"sqlite+aiosqlite:///./{settings.db_name}"  # Change to your database URI
+ # Using sqlite for now. To change to mysql or postgres we just need to modify
+ # the url, as the remaining functions via ORM would work same
+DATABASE_URL = f"sqlite+aiosqlite:///./{settings.db_name}"
 
 engine = create_async_engine(DATABASE_URL, echo=True)
 SessionLocal = sessionmaker(bind=engine, class_=AsyncSession, expire_on_commit=False)
@@ -45,3 +47,16 @@ class URL(Base):
             result = await db.execute(query)
             db_url = result.scalar_one_or_none()
             return db_url
+        
+    @classmethod
+    async def remove_row_via_short_url(cls, *, short_url):
+        async for db in get_db():
+            query = select(URL).where(URL.short_url == short_url)
+            result = await db.execute(query)
+            db_url = result.scalar_one_or_none()
+            
+            if db_url:
+                await db.delete(db_url)
+                await db.commit()
+                return True
+            return False
