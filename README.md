@@ -52,3 +52,10 @@ python3 main.py
 
 Head over to http://localhost:port/docs to access the app
 
+## Tech Stack
+
+- **Backend Framework:** [FastAPI](https://fastapi.tiangolo.com/) (Python-based, asynchronous, high-performance web framework)
+- **Cache:** [Redis](https://redis.io/) (In-memory key-value store for caching)
+- **Database:** SQLite (Lightweight SQL database for persistent storage)
+- **Deployment Platform:** AWS (EC2 + API Gateway) (Supports scalable cloud deployment)
+
