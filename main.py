@@ -31,7 +31,7 @@ if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
         "main:app", 
-        host=settings.running_host,
+        host='0.0.0.0',
         port=int(settings.app_port),
         reload=True
     )

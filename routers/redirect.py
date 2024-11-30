@@ -11,15 +11,15 @@ from config import settings
 router = APIRouter()
 
 def pause_redirect():
-    redirect_url = f"{settings.running_host}:{settings.app_port}/docs" if settings.app_port else f"{settings.running_host}/docs"
+    redirect_url = f"{settings.running_host}:{settings.app_port}/docs" if settings.debug else f"{settings.running_host}/docs"
     html_content = f"""
     <html>
         <head>
             <meta http-equiv="refresh" content="5;url={redirect_url}" />
         </head>
         <body>
-            <h1>Redirecting you to another website...</h1>
-            <p>You will be redirected to <a href="{redirect_url}">Homepage Docs</a> in 5 seconds.</p>
+            <h1>Shortened URL not found</h1>
+            <p>Click here to go to <a href="{redirect_url}">Homepage Docs</a></p>
         </body>
     </html>
     """
