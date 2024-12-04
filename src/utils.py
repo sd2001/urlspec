@@ -87,3 +87,5 @@ def raise_error_for_invalid_url(long_url: str):
         return True
     except requests.exceptions.RequestException:
         return True
+    except Exception as e2:
+        return True
