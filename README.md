@@ -50,6 +50,14 @@ python3 main.py
 ## or you may use nohup to run the process in background as well
 ```
 
+Using Dockerfile
+
+```
+cd src
+docker build -t urlspec:v1 .
+docker run --env-file ../.env -it {{container_id}}
+```
+
 Head over to http://localhost:port/docs to access the app
 
 ## Tech Stack
