@@ -1,5 +1,6 @@
 import base62
 import random
+import requests
 import hashlib
 import traceback
 from datetime import datetime, timedelta, timezone
@@ -71,3 +72,20 @@ def pause_redirect(mssg):
     </html>
     """
     return HTMLResponse(content=html_content)
+
+def raise_error_for_invalid_url(long_url: str):
+    if not long_url.startswith('http://') and not long_url.startswith('https://'):
+        long_url = f"http://{long_url}"
+    try:
+        response = requests.head(long_url, timeout=2, allow_redirects=True)
+        if response.status_code >= 404:
+            print(response.status_code)
+            return True
+        
+        return False
+    except ConnectionError as e:
+        return True
+    except requests.exceptions.RequestException:
+        return True
+    except Exception as e2:
+        return True
