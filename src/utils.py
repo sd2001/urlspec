@@ -74,7 +74,7 @@ def pause_redirect(mssg):
     return HTMLResponse(content=html_content)
 
 def raise_error_for_invalid_url(long_url: str):
-    if not long_url.startswith('http://') or long_url.startswith('https://'):
+    if not long_url.startswith('http://') and not long_url.startswith('https://'):
         long_url = f"http://{long_url}"
     try:
         response = requests.head(long_url, timeout=2, allow_redirects=True)
