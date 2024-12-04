@@ -55,7 +55,7 @@ Using Dockerfile
 ```
 cd src
 docker build -t urlspec:v1 .
-docker run --env-file ../.env -it {{container_id}}
+docker run --env-file {{path to .env}} -it {{container_id}}
 ```
 
 Head over to http://localhost:port/docs to access the app
