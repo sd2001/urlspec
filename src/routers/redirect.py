@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends, BackgroundTasks
 from fastapi.responses import RedirectResponse, HTMLResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from utils import pause_redirect, is_expired
+from utils import pause_redirect, is_expired, raise_error_for_invalid_url
 from db import *
 from simple_queue import RedisClient, increment_count  # Redis client instance
 from datetime import datetime

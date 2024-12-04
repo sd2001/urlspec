@@ -26,7 +26,7 @@ class URLResponse(BaseModel):
 @router.post("/")
 async def create_url(request: URLCreate, db: AsyncSession = Depends(get_db)):
     ## Func Requirment 4 as per the assignment doc: Validations
-    if not validators.url(request.long_url) and raise_error_for_invalid_url(request.long_url):
+    if raise_error_for_invalid_url(request.long_url):
         raise HTTPException(status_code=400, detail="URL not valid")
     ## Since this is made for a single user, for existing long urls, we would
     ## return the same short url alias instead of creating new rows
