@@ -1,5 +1,6 @@
 import base62
 import random
+import requests
 import hashlib
 import traceback
 from datetime import datetime, timedelta, timezone
@@ -71,3 +72,10 @@ def pause_redirect(mssg):
     </html>
     """
     return HTMLResponse(content=html_content)
+
+def raise_error_for_invalid_url(long_url: str):
+    response = requests.get(long_url)
+    if response.status_code != 200:
+        return False
+    
+    return True
